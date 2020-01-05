@@ -428,7 +428,7 @@ dependencies:
 - http-client-tls >=0.3 && <0.4
 - http-conduit >=2.3 && <2.4
 - directory >=1.1 && <1.4
-- warp >=3.0 && <3.3
+- warp >=3.0 && <3.4
 - data-default
 - aeson >=1.4 && <1.5
 - conduit >=1.0 && <2.0
@@ -762,7 +762,7 @@ type Form x = Html -> MForm (HandlerFor App) (FormResult x, Widget)
 
 -- | A convenient synonym for database access functions.
 type DB a = forall (m :: * -> *).
-    (MonadIO m) => ReaderT SqlBackend m a
+    (MonadUnliftIO m) => ReaderT SqlBackend m a
 
 -- Please see the documentation for the Yesod typeclass. There are a number
 -- of settings which can be configured by overriding methods here.
@@ -1157,6 +1157,8 @@ import Yesod.Default.Config2 as Import
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE TemplateHaskell            #-}
 {-# LANGUAGE TypeFamilies               #-}
+{-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE StandaloneDeriving #-}
 module Model where
 
 import ClassyPrelude.Yesod
@@ -10693,7 +10695,8 @@ getTables = do
     tables <- rawSql [st|
         SELECT table_name
         FROM information_schema.tables
-        WHERE table_schema = 'public';
+        WHERE table_schema = 'public'
+        AND table_type = 'BASE TABLE';
     |] []
 
     return $ map unSingle tables

@@ -809,13 +809,25 @@ unsafeHandler = Unsafe.fakeHandlerGetLogger appLogger
 -- https://github.com/yesodweb/yesod/wiki/i18n-messages-in-the-scaffolding
 
 {-# START_FILE src/Handler/Comment.hs #-}
+{-# LANGUAGE OverloadedStrings #-}
 module Handler.Comment where
 
 import Import
+import Data.Aeson
+
+newtype Comment = Comment Text
+
+instance ToJSON Comment where
+    toJSON (Comment t) = object ["message" .= t]
+instance FromJSON Comment where
+    parseJSON = withObject "Comment" $ \o -> Comment <$> o .: "message"
 
 postCommentR :: Handler Value
-postCommentR =
-    error "The simple scaffolding does not support authentication or a database for storing comments"
+postCommentR = do
+    -- requireCheckJsonBody will parse the request body into the appropriate type, or return a 400 status code if the request JSON is invalid.
+    comment <- requireCheckJsonBody :: Handler Comment
+
+    returnJson comment
 
 {-# START_FILE src/Handler/Common.hs #-}
 {-# LANGUAGE NoImplicitPrelude #-}

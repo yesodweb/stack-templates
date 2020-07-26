@@ -296,7 +296,7 @@ stanzas:
 {-# START_FILE config/robots.txt #-}
 User-agent: *
 
-{-# START_FILE config/routes #-}
+{-# START_FILE config/routes.yesodroutes #-}
 -- By default this file is used by `parseRoutesFile` in Foundation.hs
 -- Syntax for this file here: https://www.yesodweb.com/book/routing-and-handlers
 
@@ -658,7 +658,7 @@ data MenuTypes
 -- This function also generates the following type synonyms:
 -- type Handler = HandlerFor App
 -- type Widget = WidgetFor App ()
-mkYesodData "App" $(parseRoutesFile "config/routes")
+mkYesodData "App" $(parseRoutesFile "config/routes.yesodroutes")
 
 -- | A convenient synonym for creating forms.
 type Form x = Html -> MForm (HandlerFor App) (FormResult x, Widget)
@@ -873,7 +873,7 @@ data FileForm = FileForm
 
 -- This is a handler function for the GET request method on the HomeR
 -- resource pattern. All of your resource patterns are defined in
--- config/routes
+-- config/routes.yesodroutes
 --
 -- The majority of the code you will write in Yesod lives in these handler
 -- functions. You can spread them across multiple files if you are so
@@ -10083,7 +10083,7 @@ $else
                         <li .list-group-item>
                             The <tt>#{handlerName}</tt> handler is set to generate your
                             site's home screen in the Routes file
-                            <tt>config/routes
+                            <tt>config/routes.yesodroutes
 
                         <li .list-group-item>
                             We can link to other handlers, like the <a href="@{CommentR}">Comment</a>.

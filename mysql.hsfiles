@@ -241,6 +241,10 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
 {-# START_FILE config/keter.yml #-}
 # After you've edited this file, remove the following line to allow
 # `yesod keter` to build your bundle.
+#
+# Please make sure `port` value on `config/setings.yaml` is set to
+# use `PORT` env variable.
+# port: "_env:PORT ... "
 user-edited: false
 
 # A Keter app is composed of 1 or more stanzas. The main stanza will define our
@@ -356,6 +360,9 @@ User-agent: *
 static-dir:     "_env:YESOD_STATIC_DIR:static"
 host:           "_env:YESOD_HOST:*4" # any IPv4 host
 port:           "_env:YESOD_PORT:3000" # NB: The port `yesod devel` uses is distinct from this value. Set the `yesod devel` port from the command line.
+# For `keter` user, enable below line instead of `YESOD_PORT`
+#port:           "_env:PORT:3000" # `keter` uses `PORT` env var name
+
 ip-from-header: "_env:YESOD_IP_FROM_HEADER:false"
 
 # Default behavior: determine the application root from the request headers.
@@ -1383,6 +1390,20 @@ import Yesod.Static (staticFiles)
 --
 --     StaticFile ["js", "script.js"] []
 staticFiles (appStaticDir compileTimeAppSettings)
+
+-- If you still want to update the references by force
+-- especially when you are devloping like `stack exec -- yesod devel`
+-- you can update references by chaning file stamp.
+--
+-- On linux or Unix-like system, you can use
+--     shell> touch /Path/To/Settings/StaticFiles.hs
+--
+-- In this way you can use on your shakespearean template(s)
+-- Let's say you have image on "yourStaticDir/img/background-1.jpg"
+-- you can use the reference of the file on shakespearean templates like bellow
+--
+--     /* note: `-' becomes '_' as well */
+--     @{StaticR img_background_1_jpg}
 
 {-# START_FILE static/css/bootstrap.css #-}
 @import url("https://fonts.googleapis.com/css?family=Lato:400,700,400italic");

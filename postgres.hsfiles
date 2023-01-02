@@ -712,7 +712,7 @@ db = handler . runDB
 module Foundation where
 
 import Import.NoFoundation
-import Data.Kind(Type)
+import Data.Kind            (Type)
 import Database.Persist.Sql (ConnectionPool, runSqlPool)
 import Text.Hamlet          (hamletFile)
 import Text.Jasmine         (minifym)

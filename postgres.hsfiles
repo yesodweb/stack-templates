@@ -420,7 +420,7 @@ dependencies:
 - classy-prelude >=1.5 && <1.6
 - classy-prelude-conduit >=1.5 && <1.6
 - classy-prelude-yesod >=1.5 && <1.6
-- bytestring >=0.10 && <0.11
+- bytestring >=0.10 && <0.12
 - text >=0.11 && <2.0
 - persistent >=2.9 && <2.14
 - persistent-postgresql >=2.13 && <2.14
@@ -712,6 +712,7 @@ db = handler . runDB
 module Foundation where
 
 import Import.NoFoundation
+import Data.Kind            (Type)
 import Database.Persist.Sql (ConnectionPool, runSqlPool)
 import Text.Hamlet          (hamletFile)
 import Text.Jasmine         (minifym)
@@ -767,7 +768,7 @@ mkYesodData "App" $(parseRoutesFile "config/routes.yesodroutes")
 type Form x = Html -> MForm (HandlerFor App) (FormResult x, Widget)
 
 -- | A convenient synonym for database access functions.
-type DB a = forall (m :: * -> *).
+type DB a = forall (m :: Type -> Type).
     (MonadUnliftIO m) => ReaderT SqlBackend m a
 
 -- Please see the documentation for the Yesod typeclass. There are a number
